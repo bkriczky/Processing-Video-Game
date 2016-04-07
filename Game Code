@@ -1,0 +1,134 @@
+
+protag Man = new protag(color(0), 40, 40);
+
+boolean colliding = false;
+int collisions = 0;
+int counter = 1;
+Ball[] balls = new Ball[10];
+
+class Ball {
+  
+  int counter = 1;
+  int x;
+  int y;
+  int r;
+  int diameter;
+  int x_inc;
+  int y_inc;
+  
+  // Constructor function.
+  Ball(int center_x, int center_y, int radius, int x_increment, int y_increment) {
+    x = center_x;
+    y = center_y;
+    r = radius;
+    diameter = radius * 2;
+    x_inc = x_increment;
+    y_inc = y_increment;
+  }
+  
+ 
+  void move() {
+      x =  x + x_inc;
+      y =  y + y_inc;
+  }
+  
+  void paint() {
+     ellipse(x, y, diameter, diameter);
+  }
+  
+}
+
+
+
+void setup(){
+  size (900, 500);
+  for (int i = 0; i < balls.length; i++) {
+    balls[i] = new Ball(width, 0, 10, (int)(-1 + i*-2.0), (int)random(5, 9));
+  }
+}
+
+void draw() {
+  boolean Bor = false;
+  background(150, 0, 0);
+  fill(0);
+  rectMode(CORNER);
+  rect(0, 400, width, width);
+  rectMode(CENTER);
+  Man.move(mouseX, 375);
+
+
+  int v = 0;
+  while (v < balls.length) {
+    balls[v].move();
+    balls[v].paint();
+    if (balls[v].y > height) {
+      balls[v].y = 0 - balls[v].diameter/2;
+      balls[v].x = width;
+      balls[v].y_inc = (int)random(5, 9);
+    }
+    v++; 
+  }
+  
+  if (collision()) {
+    background(0, 255, 0);
+    colliding = true;
+  } else if (colliding) {
+    collisions += 1;
+    colliding = false;
+  }
+    
+  
+  if (collisions > 3) {
+    background(0);
+  }
+} 
+  
+
+boolean collision() { 
+  int rightbound = Man._x + 20;
+  int leftbound = Man._x - 20;
+  int topbound = Man._y - 40;
+  int bottombound = Man._y + 40;
+
+  for(int i = 0; i < balls.length; i++) {
+    if (balls[i].x > leftbound && balls[i].x < rightbound && balls[i].y > topbound && balls[i].y < bottombound) {
+      return true; 
+    }
+  }
+  return false;
+}
+
+class protag {
+  color _c;
+  int _w;
+  int _h;
+  int _x;
+  int _y;
+  
+  protag(color c, int w, int h) {  
+    _c = c;
+    _w = w;
+    _h = h;
+  
+  } 
+  void move(int x, int y) {
+    _x = x;
+    _y = y;
+    pushMatrix();
+    translate(_x, _y);
+    Protag();
+    popMatrix();
+    
+    
+  }   
+  void Protag(){
+    fill(_c);
+    rect(0, 0, _w, _h);
+    rect(-15, 15, 22, 22);
+    rect(15, 15, 22, 22);
+    rect(-20, -20, 22, 22);
+    rect(20, -20, 22, 22);
+    rect(3, -30, 22, 22);
+  }
+}
+
